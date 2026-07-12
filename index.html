@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dhenifer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>💌 Feliz 1 mês, meu amor!</title>
     
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.85em' font-size='80'%3E❤️%3C/text%3E%3Cline x1='15' y1='82' x2='85' y2='82' stroke='%23e74c3c' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E" type="image/svg+xml" />
     
@@ -26,6 +26,10 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         body {
@@ -34,17 +38,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 1.5rem;
+            padding: 0.8rem;
             font-family: system-ui, -apple-system, sans-serif;
+            overflow: hidden;
         }
 
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 600px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2rem;
+            gap: 1.5rem;
+            padding: 0.5rem 0;
         }
 
         .carta-wrapper {
@@ -58,7 +64,7 @@
 
         .carta-papel {
             width: 100%;
-            max-width: 760px;
+            max-width: 600px;
             aspect-ratio: 16 / 10;
             position: relative;
             cursor: pointer;
@@ -66,6 +72,12 @@
             transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
             transform-style: preserve-3d;
             background: transparent !important;
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+        }
+
+        .carta-papel:focus-visible {
+            outline: none !important;
         }
 
         .fundo-carta {
@@ -128,22 +140,22 @@
             position: absolute;
             font-family: 'Aston Script', cursive;
             color: #4a2c2a;
-            font-size: 3rem;
+            font-size: 2.2rem;
             text-align: center;
             line-height: 1.3;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             pointer-events: none;
             z-index: 3;
-            padding: 0.5rem;
-            max-width: 80%;
+            padding: 0.3rem;
+            max-width: 85%;
             word-wrap: break-word;
             background: transparent !important;
         }
 
         .texto-sobreposto .cursor-blink {
             display: inline-block;
-            width: 3px;
-            height: 1em;
+            width: 2px;
+            height: 0.8em;
             background: currentColor;
             margin-left: 2px;
             animation: piscar 0.7s step-end infinite;
@@ -171,28 +183,28 @@
         }
 
         .carta-papel.aberta {
-            transform: scale(1.08) translateZ(80px) rotateY(-2deg);
+            transform: scale(1.05) translateZ(60px) rotateY(-2deg);
             z-index: 10;
         }
 
         .carta-papel.aberta .imagem-carta {
             opacity: 0.2;
-            transform: scale(0.85) translateZ(-60px);
+            transform: scale(0.85) translateZ(-50px);
             filter: blur(3px);
         }
 
         .carta-papel.aberta .conteudo-interno {
             opacity: 1;
-            transform: scale(1) translateZ(20px) rotateX(0deg);
+            transform: scale(1) translateZ(15px) rotateX(0deg);
         }
 
         .dica-clique {
-            margin-top: 1rem;
-            font-size: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
             letter-spacing: 0.04em;
             color: #b7a79a;
             background: rgba(255, 248, 240, 0.7);
-            padding: 0.4rem 1.6rem;
+            padding: 0.3rem 1.4rem;
             border-radius: 40px;
             backdrop-filter: blur(4px);
             border: 1px solid #e6dad0;
@@ -200,6 +212,7 @@
             opacity: 0.9;
             user-select: none;
             pointer-events: none;
+            -webkit-tap-highlight-color: transparent !important;
         }
 
         .carta-papel.aberta~.dica-clique {
@@ -207,24 +220,105 @@
             transform: translateY(8px);
         }
 
+        /* ===== CELULAR ===== */
         @media (max-width: 700px) {
+            body {
+                padding: 0.5rem;
+            }
             .carta-papel {
                 max-width: 100%;
+                aspect-ratio: 16 / 10;
             }
             .texto-sobreposto {
-                font-size: 2rem;
+                font-size: 1.6rem !important;
+                padding: 0.2rem;
+                max-width: 90%;
+            }
+            .texto-sobreposto .cursor-blink {
+                width: 2px;
+                height: 0.7em;
+            }
+            .dica-clique {
+                font-size: 0.8rem;
+                padding: 0.25rem 1.2rem;
+            }
+            .carta-papel.aberta {
+                transform: scale(1.03) translateZ(40px) rotateY(-1deg);
+            }
+            .carta-papel.aberta .imagem-carta {
+                transform: scale(0.88) translateZ(-30px);
+            }
+            .carta-papel.aberta .conteudo-interno {
+                transform: scale(1) translateZ(10px) rotateX(0deg);
             }
         }
 
         @media (max-width: 480px) {
+            body {
+                padding: 0.3rem;
+            }
+            .container {
+                gap: 0.8rem;
+            }
             .texto-sobreposto {
-                font-size: 1.5rem;
+                font-size: 1.2rem !important;
+                padding: 0.15rem;
+                max-width: 92%;
+            }
+            .texto-sobreposto .cursor-blink {
+                width: 1.5px;
+                height: 0.6em;
+            }
+            .carta-papel {
+                aspect-ratio: 16 / 10;
+            }
+            .dica-clique {
+                font-size: 0.7rem;
+                padding: 0.2rem 1rem;
+            }
+            .carta-papel.aberta {
+                transform: scale(1.02) translateZ(30px) rotateY(-0.5deg);
+            }
+            .carta-papel.aberta .imagem-carta {
+                transform: scale(0.9) translateZ(-20px);
+                filter: blur(2px);
+            }
+            .carta-papel.aberta .conteudo-interno {
+                transform: scale(1) translateZ(8px) rotateX(0deg);
             }
         }
 
-        .carta-papel:focus-visible {
-            outline: 3px solid #d68b7a;
-            outline-offset: 8px;
+        /* ===== TELAS MUITO PEQUENAS ===== */
+        @media (max-width: 380px) {
+            .texto-sobreposto {
+                font-size: 1rem !important;
+            }
+            .container {
+                gap: 0.5rem;
+            }
+        }
+
+        /* Remove destaque azul em todos os elementos clicáveis */
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-touch-callout: none !important;
+            outline: none !important;
+        }
+
+        *:focus {
+            outline: none !important;
+        }
+
+        *:active {
+            outline: none !important;
+        }
+
+        /* Remove seleção azul em imagens */
+        img {
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+            pointer-events: none !important;
         }
     </style>
 </head>
@@ -248,53 +342,55 @@
             </div>
         </div>
 
+        <div class="dica-clique" id="dicaClique">💌 clique para abrir</div>
+
     </div>
 
     <script>
         (function() {
-            const carta = document.getElementById('cartaPapel');
-            const fundoCarta = document.getElementById('fundoCarta');
-            const imgCarta = document.getElementById('imagemCarta');
-            const imgInterna = document.getElementById('imagemInterna');
-            const textoSobreposto = document.getElementById('textoSobreposto');
-            const lapisAnimado = document.getElementById('lapisAnimado');
+            var carta = document.getElementById('cartaPapel');
+            var fundoCarta = document.getElementById('fundoCarta');
+            var imgCarta = document.getElementById('imagemCarta');
+            var imgInterna = document.getElementById('imagemInterna');
+            var textoSobreposto = document.getElementById('textoSobreposto');
+            var lapisAnimado = document.getElementById('lapisAnimado');
 
-            const URL_DADOS = 'https://raw.githubusercontent.com/Mikill73/Dhenifer/refs/heads/main/configuracoes.json';
+            var URL_DADOS = 'https://raw.githubusercontent.com/Mikill73/Dhenifer/refs/heads/main/configuracoes.json';
 
-            const STORAGE_FUNDO = 'carta_1mes_imagem_fundo';
-            const STORAGE_CARTA = 'carta_1mes_imagem_carta';
-            const STORAGE_INTERNA = 'carta_1mes_imagem_interna';
-            const STORAGE_LAPIS = 'carta_1mes_imagem_lapis';
-            const STORAGE_SOM_ABRIR = 'carta_1mes_som_abrir';
-            const STORAGE_SOM_ESCREVER = 'carta_1mes_som_escrever';
-            const STORAGE_CONFIG_FUNDO = 'carta_1mes_config_fundo';
-            const STORAGE_CONFIG_CARTA = 'carta_1mes_config_carta';
-            const STORAGE_CONFIG_INTERNA = 'carta_1mes_config_interna';
-            const STORAGE_CONFIG_LAPIS = 'carta_1mes_config_lapis';
-            const STORAGE_CONFIG_TEXTO = 'carta_1mes_config_texto';
-            const STORAGE_CONFIG_SOM = 'carta_1mes_config_som';
+            var STORAGE_FUNDO = 'carta_1mes_imagem_fundo';
+            var STORAGE_CARTA = 'carta_1mes_imagem_carta';
+            var STORAGE_INTERNA = 'carta_1mes_imagem_interna';
+            var STORAGE_LAPIS = 'carta_1mes_imagem_lapis';
+            var STORAGE_SOM_ABRIR = 'carta_1mes_som_abrir';
+            var STORAGE_SOM_ESCREVER = 'carta_1mes_som_escrever';
+            var STORAGE_CONFIG_FUNDO = 'carta_1mes_config_fundo';
+            var STORAGE_CONFIG_CARTA = 'carta_1mes_config_carta';
+            var STORAGE_CONFIG_INTERNA = 'carta_1mes_config_interna';
+            var STORAGE_CONFIG_LAPIS = 'carta_1mes_config_lapis';
+            var STORAGE_CONFIG_TEXTO = 'carta_1mes_config_texto';
+            var STORAGE_CONFIG_SOM = 'carta_1mes_config_som';
 
-            const TODAS_CHAVES = [
+            var TODAS_CHAVES = [
                 STORAGE_FUNDO, STORAGE_CARTA, STORAGE_INTERNA, STORAGE_LAPIS,
                 STORAGE_SOM_ABRIR, STORAGE_SOM_ESCREVER,
                 STORAGE_CONFIG_FUNDO, STORAGE_CONFIG_CARTA, STORAGE_CONFIG_INTERNA,
                 STORAGE_CONFIG_LAPIS, STORAGE_CONFIG_TEXTO, STORAGE_CONFIG_SOM
             ];
 
-            const FONTES = {
+            var FONTES = {
                 'aston': 'Aston Script',
                 'playwrite-id': 'Playwrite ID',
                 'playwrite-nz': 'Playwrite NZ'
             };
 
-            let animacaoTimeout = null;
-            let animacaoCancelada = false;
-            let textoCompleto = '';
-            let posicaoLetraAtual = 0;
-            let estaAberto = false;
-            let somAbrir = null;
-            let somEscrever = null;
-            let somEscreverTocado = false;
+            var animacaoTimeout = null;
+            var animacaoCancelada = false;
+            var textoCompleto = '';
+            var posicaoLetraAtual = 0;
+            var estaAberto = false;
+            var somAbrir = null;
+            var somEscrever = null;
+            var somEscreverTocado = false;
 
             function salvarImagemStorage(chave, dados) {
                 try {
@@ -306,18 +402,14 @@
                 return localStorage.getItem(chave);
             }
 
-            function salvarConfig(chave, config) {
-                localStorage.setItem(chave, JSON.stringify(config));
-            }
-
             function carregarConfig(chave) {
-                const dados = localStorage.getItem(chave);
+                var dados = localStorage.getItem(chave);
                 return dados ? JSON.parse(dados) : null;
             }
 
             function aplicarConfigImagem(img, rotacao, tamanho) {
                 if (!img || !img.src) return;
-                img.style.transform = `rotate(${rotacao}deg) scale(${tamanho / 100})`;
+                img.style.transform = 'rotate(' + rotacao + 'deg) scale(' + (tamanho / 100) + ')';
                 img.style.objectFit = 'contain';
                 img.style.background = 'transparent';
             }
@@ -501,7 +593,7 @@
                     var nomeFonte = FONTES[fonte] || 'Aston Script';
                     textoSobreposto.style.fontFamily = '\'' + nomeFonte + '\', cursive';
                     textoSobreposto.style.color = configTexto.cor || '#4a2c2a';
-                    textoSobreposto.style.fontSize = (configTexto.tamanho || 3) + 'rem';
+                    textoSobreposto.style.fontSize = (configTexto.tamanho || 2.2) + 'rem';
                     textoSobreposto.style.left = (configTexto.posX || 50) + '%';
                     textoSobreposto.style.top = (configTexto.posY || 50) + '%';
                     textoSobreposto.style.transform = 'translate(-50%, -50%)';
