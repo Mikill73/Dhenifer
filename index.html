@@ -30,8 +30,8 @@
 
         html, body {
             width: 100%;
-            min-height: 100vh;
-            overflow-x: hidden;
+            height: 100%;
+            overflow: hidden;
         }
 
         body {
@@ -39,19 +39,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 8px;
+            padding: 0.8rem;
             font-family: system-ui, -apple-system, sans-serif;
             -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .container {
             width: 100%;
             max-width: 480px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            padding: 4px;
+            align-items: center;
+            height: 100vh;
+            max-height: 800px;
+            padding: 0.5rem;
         }
 
         .carta-wrapper {
@@ -61,11 +63,13 @@
             width: 100%;
             perspective: 1200px;
             position: relative;
+            height: 100%;
+            max-height: 700px;
         }
 
         .carta-papel {
             width: 100%;
-            max-width: 460px;
+            max-width: 420px;
             aspect-ratio: 16 / 11;
             position: relative;
             cursor: pointer;
@@ -77,6 +81,7 @@
             user-select: none;
             -webkit-user-select: none;
             touch-action: manipulation;
+            margin: 0 auto;
         }
 
         .carta-papel:focus-visible {
@@ -125,6 +130,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 8%;
         }
 
         .imagem-interna {
@@ -143,18 +149,20 @@
             position: absolute;
             font-family: 'Aston Script', cursive;
             color: #4a2c2a;
-            font-size: clamp(0.8rem, 4vw, 2.8rem);
+            font-size: clamp(1.2rem, 5vw, 2.8rem);
             text-align: center;
-            line-height: 1.2;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            line-height: 1.3;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             pointer-events: none;
             z-index: 3;
             padding: 0.3rem;
-            max-width: 75%;
+            max-width: 70%;
             word-wrap: break-word;
             background: transparent !important;
-            transform: translate(-50%, -50%);
-            letter-spacing: 0.02em;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) !important;
+            width: auto;
         }
 
         .texto-sobreposto .cursor-blink {
@@ -178,11 +186,11 @@
             pointer-events: none;
             object-fit: contain;
             background: transparent !important;
-            transition: transform 0.12s ease;
+            transition: transform 0.15s ease;
             opacity: 0;
             transform-origin: center center;
-            width: clamp(18px, 6vw, 50px);
-            height: clamp(18px, 6vw, 50px);
+            width: 12%;
+            height: 12%;
         }
 
         .lapis-animado.visivel {
@@ -190,7 +198,7 @@
         }
 
         .carta-papel.aberta {
-            transform: scale(1.04) translateZ(40px) rotateY(-1.5deg);
+            transform: scale(1.04) translateZ(60px) rotateY(-1.5deg);
             z-index: 10;
         }
 
@@ -202,60 +210,65 @@
 
         .carta-papel.aberta .conteudo-interno {
             opacity: 1;
-            transform: scale(1) translateZ(10px) rotateX(0deg);
+            transform: scale(1) translateZ(15px) rotateX(0deg);
         }
 
-        /* Ajustes para telas muito pequenas */
-        @media (max-width: 420px) {
+        /* Ajustes específicos para celular */
+        @media (max-width: 480px) {
             body {
-                padding: 4px;
+                padding: 0.4rem;
             }
+            
+            .container {
+                padding: 0.3rem;
+                max-height: 700px;
+            }
+            
             .carta-papel {
                 max-width: 100%;
-                aspect-ratio: 16 / 12;
+                aspect-ratio: 16 / 11.5;
             }
+            
+            .conteudo-interno {
+                padding: 6%;
+            }
+            
             .texto-sobreposto {
-                font-size: clamp(0.6rem, 3.5vw, 1.8rem);
-                max-width: 70%;
+                font-size: clamp(1rem, 4.5vw, 2rem);
+                max-width: 75%;
                 padding: 0.2rem;
             }
+            
             .lapis-animado {
-                width: clamp(14px, 5vw, 35px);
-                height: clamp(14px, 5vw, 35px);
+                width: 10%;
+                height: 10%;
             }
         }
 
-        @media (max-width: 360px) {
-            .texto-sobreposto {
-                font-size: clamp(0.5rem, 3vw, 1.4rem);
-                max-width: 65%;
-                line-height: 1.1;
-            }
-            .lapis-animado {
-                width: clamp(10px, 4vw, 28px);
-                height: clamp(10px, 4vw, 28px);
-            }
-        }
-
-        /* Para telas maiores (tablet/desktop) */
-        @media (min-width: 768px) {
-            body {
-                padding: 2rem;
-            }
-            .container {
-                max-width: 600px;
-            }
+        @media (max-width: 380px) {
             .carta-papel {
-                max-width: 560px;
+                aspect-ratio: 16 / 12;
+            }
+            
+            .texto-sobreposto {
+                font-size: clamp(0.8rem, 4vw, 1.6rem);
+                max-width: 80%;
+            }
+            
+            .conteudo-interno {
+                padding: 4%;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .carta-papel {
+                max-width: 500px;
                 aspect-ratio: 16 / 10;
             }
+            
             .texto-sobreposto {
-                font-size: clamp(1.2rem, 3vw, 3.2rem);
-                max-width: 70%;
-            }
-            .lapis-animado {
-                width: clamp(24px, 4vw, 55px);
-                height: clamp(24px, 4vw, 55px);
+                font-size: clamp(1.8rem, 3.5vw, 3.5rem);
+                max-width: 65%;
             }
         }
     </style>
@@ -263,12 +276,10 @@
 <body>
 
     <div class="container">
-
         <div class="carta-wrapper">
             <div class="carta-papel" id="cartaPapel" role="button" tabindex="0" aria-label="Abrir carta">
 
                 <img class="fundo-carta" id="fundoCarta" src="" alt="Fundo da carta" />
-
                 <img class="imagem-carta" id="imagemCarta" src="" alt="Imagem da carta" />
 
                 <div class="conteudo-interno" id="conteudoInterno">
@@ -279,7 +290,6 @@
 
             </div>
         </div>
-
     </div>
 
     <script>
@@ -336,10 +346,6 @@
 
             function carregarImagemStorage(chave) {
                 return localStorage.getItem(chave);
-            }
-
-            function salvarConfig(chave, config) {
-                localStorage.setItem(chave, JSON.stringify(config));
             }
 
             function carregarConfig(chave) {
@@ -411,8 +417,8 @@
                 textoSobreposto.appendChild(cursor);
                 
                 var velocidade = configTexto ? (configTexto.velocidade || 80) : 80;
-                var posX = configTexto ? (configTexto.posX || 50) : 50;
-                var posY = configTexto ? (configTexto.posY || 50) : 50;
+                var posX = 50;
+                var posY = 50;
                 
                 var configLapis = carregarConfig(STORAGE_CONFIG_LAPIS);
                 var rotacaoLapisBase = configLapis ? (configLapis.rotacao || -30) : -30;
@@ -448,8 +454,7 @@
                         lapisAnimado.style.left = lapisX + '%';
                         lapisAnimado.style.top = lapisY + '%';
                         
-                        var rotacaoAtual = rotacaoLapisBase + (1 - progresso) * 8;
-                        lapisAnimado.style.transform = 'translate(-50%, -50%) rotate(' + rotacaoAtual + 'deg) scale(' + (tamanhoLapisBase / 100) + ')';
+                        lapisAnimado.style.transform = 'translate(-50%, -50%) rotate(' + (rotacaoLapisBase + (1 - progresso) * 8) + 'deg) scale(' + (tamanhoLapisBase / 100) + ')';
                         
                         if (letra !== ' ') {
                             tocarSomEscrever();
@@ -465,8 +470,8 @@
                             cursorElement.remove();
                         }
                         
-                        lapisAnimado.style.left = (posX + 12) + '%';
-                        lapisAnimado.style.top = (posY + 6) + '%';
+                        lapisAnimado.style.left = '60%';
+                        lapisAnimado.style.top = '55%';
                         
                         animacaoTimeout = null;
                         if (somEscrever) {
@@ -476,7 +481,7 @@
                     }
                 }
                 
-                setTimeout(escreverProximaLinha, 350);
+                setTimeout(escreverProximaLinha, 400);
             }
 
             function carregarSomStorage(chave) {
@@ -534,10 +539,6 @@
                     var nomeFonte = FONTES[fonte] || 'Aston Script';
                     textoSobreposto.style.fontFamily = '\'' + nomeFonte + '\', cursive';
                     textoSobreposto.style.color = configTexto.cor || '#4a2c2a';
-                    textoSobreposto.style.fontSize = 'clamp(0.8rem, 4vw, 2.8rem)';
-                    textoSobreposto.style.left = (configTexto.posX || 50) + '%';
-                    textoSobreposto.style.top = (configTexto.posY || 50) + '%';
-                    textoSobreposto.style.transform = 'translate(-50%, -50%)';
                 }
 
                 somAbrir = carregarSomStorage(STORAGE_SOM_ABRIR);
@@ -589,11 +590,8 @@
                 var lapisDados = carregarImagemStorage(STORAGE_LAPIS);
                 if (lapisDados) {
                     lapisAnimado.classList.add('visivel');
-                    var configTexto = carregarConfig(STORAGE_CONFIG_TEXTO);
-                    var posX = configTexto ? (configTexto.posX || 50) : 50;
-                    var posY = configTexto ? (configTexto.posY || 50) : 50;
-                    lapisAnimado.style.left = posX + '%';
-                    lapisAnimado.style.top = posY + '%';
+                    lapisAnimado.style.left = '48%';
+                    lapisAnimado.style.top = '48%';
                     var configLapis = carregarConfig(STORAGE_CONFIG_LAPIS);
                     var rot = configLapis ? (configLapis.rotacao || -30) : -30;
                     var tam = configLapis ? (configLapis.tamanho || 60) : 60;
@@ -602,17 +600,13 @@
                 
                 setTimeout(function() {
                     iniciarAnimacaoEscrita();
-                }, Math.min(tempo * 0.4, 450));
+                }, Math.min(tempo * 0.5, 500));
             }
 
             carta.addEventListener('click', function(e) {
                 e.stopPropagation();
                 abrirCarta();
             });
-
-            carta.addEventListener('touchstart', function(e) {
-                // Previne o comportamento padrão em dispositivos móveis
-            }, { passive: true });
 
             carta.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -622,6 +616,13 @@
             });
 
             carregarDados();
+
+            window.addEventListener('resize', function() {
+                var isMobile = window.innerWidth <= 480;
+                if (isMobile) {
+                    document.querySelector('.container').style.padding = '0.3rem';
+                }
+            });
         })();
     </script>
 
