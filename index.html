@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playwrite+ID:wght@100..400&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playwrite+NZ:wght@100..400&display=swap" rel="stylesheet">
     
-<style>
+    <style>
         @font-face {
             font-family: 'Aston Script';
             src: local('Aston Script'), local('AstonScript'),
@@ -147,14 +147,14 @@
             position: absolute;
             font-family: 'Aston Script', cursive;
             color: #4a2c2a;
-            font-size: clamp(0.5rem, 2.2vw, 1.2rem);
+            font-size: clamp(0.5rem, 2.2vw, 1.1rem);
             text-align: left;
             line-height: 1.2;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             pointer-events: none;
             z-index: 3;
             padding: 0.1rem 0.3rem;
-            max-width: 82%;
+            max-width: 85%;
             word-wrap: break-word;
             background: transparent !important;
             left: 50%;
@@ -162,7 +162,7 @@
             transform: translate(-50%, -50%) !important;
             width: auto;
             white-space: pre-wrap;
-            letter-spacing: 0.01em;
+            letter-spacing: 0.005em;
         }
 
         .texto-sobreposto .cursor-blink {
@@ -217,7 +217,7 @@
             transform: scale(1) translateZ(15px) rotateX(0deg);
         }
 
-        /* CELULAR - AUMENTA A IMAGEM E DIMINUI O TEXTO */
+        /* CELULAR */
         @media (max-width: 480px) {
             body {
                 padding: 0.1rem;
@@ -242,10 +242,10 @@
             }
             
             .texto-sobreposto {
-            font-size: clamp(0.55rem, 2.4vw, 1.2rem);
-            max-width: 85%;
-            padding: 0.1rem 0.3rem;
-            letter-spacing: 0.005em;
+                font-size: clamp(0.5rem, 2.2vw, 1.1rem);
+                max-width: 85%;
+                padding: 0.1rem 0.3rem;
+                letter-spacing: 0.005em;
             }
             
             .lapis-animado {
@@ -340,6 +340,7 @@
             var STORAGE_LAPIS = 'carta_1mes_imagem_lapis';
             var STORAGE_SOM_ABRIR = 'carta_1mes_som_abrir';
             var STORAGE_SOM_ESCREVER = 'carta_1mes_som_escrever';
+            var STORAGE_MUSICA = 'carta_1mes_musica';
             var STORAGE_CONFIG_FUNDO = 'carta_1mes_config_fundo';
             var STORAGE_CONFIG_CARTA = 'carta_1mes_config_carta';
             var STORAGE_CONFIG_INTERNA = 'carta_1mes_config_interna';
@@ -349,7 +350,7 @@
 
             var TODAS_CHAVES = [
                 STORAGE_FUNDO, STORAGE_CARTA, STORAGE_INTERNA, STORAGE_LAPIS,
-                STORAGE_SOM_ABRIR, STORAGE_SOM_ESCREVER,
+                STORAGE_SOM_ABRIR, STORAGE_SOM_ESCREVER, STORAGE_MUSICA,
                 STORAGE_CONFIG_FUNDO, STORAGE_CONFIG_CARTA, STORAGE_CONFIG_INTERNA,
                 STORAGE_CONFIG_LAPIS, STORAGE_CONFIG_TEXTO, STORAGE_CONFIG_SOM
             ];
@@ -367,7 +368,9 @@
             var estaAberto = false;
             var somAbrir = null;
             var somEscrever = null;
+            var musicaFundo = null;
             var somEscreverTocado = false;
+            var musicaTimeout = null;
 
             function carregarImagemStorage(chave) {
                 return localStorage.getItem(chave);
@@ -516,6 +519,44 @@
                 return null;
             }
 
+            function tocarMusicaFundo() {
+                if (musicaFundo) {
+                    try {
+                        musicaFundo.volume = 0;
+                        musicaFundo.loop = true;
+                        musicaFundo.play().catch(function() {});
+                        
+                        var volumeAtual = 0;
+                        var alvo = 0.45;
+                        var passo = 0.005;
+                        
+                        function aumentarVolume() {
+                            if (volumeAtual < alvo) {
+                                volumeAtual = Math.min(volumeAtual + passo, alvo);
+                                musicaFundo.volume = volumeAtual;
+                                setTimeout(aumentarVolume, 100);
+                            }
+                        }
+                        
+                        setTimeout(aumentarVolume, 100);
+                    } catch(e) {}
+                }
+            }
+
+            function pararMusicaFundo() {
+                if (musicaFundo) {
+                    try {
+                        musicaFundo.pause();
+                        musicaFundo.currentTime = 0;
+                        musicaFundo.volume = 0;
+                    } catch(e) {}
+                }
+                if (musicaTimeout) {
+                    clearTimeout(musicaTimeout);
+                    musicaTimeout = null;
+                }
+            }
+
             function aplicarDados() {
                 var fundoDados = carregarImagemStorage(STORAGE_FUNDO);
                 if (fundoDados) {
@@ -565,6 +606,11 @@
 
                 somAbrir = carregarSomStorage(STORAGE_SOM_ABRIR);
                 somEscrever = carregarSomStorage(STORAGE_SOM_ESCREVER);
+                musicaFundo = carregarSomStorage(STORAGE_MUSICA);
+                if (musicaFundo) {
+                    musicaFundo.volume = 0;
+                    musicaFundo.loop = true;
+                }
             }
 
             function carregarDados() {
@@ -596,6 +642,7 @@
                     pararAnimacao();
                     textoSobreposto.textContent = '';
                     lapisAnimado.classList.remove('visivel');
+                    pararMusicaFundo();
                     return;
                 }
                 
@@ -620,6 +667,12 @@
                     lapisAnimado.style.transform = 'translate(-50%, -50%) rotate(' + rot + 'deg) scale(' + (tam / 100) + ')';
                 }
                 
+                if (musicaFundo) {
+                    musicaTimeout = setTimeout(function() {
+                        tocarMusicaFundo();
+                    }, 1000);
+                }
+                
                 setTimeout(function() {
                     iniciarAnimacaoEscrita();
                 }, Math.min(tempo * 0.4, 400));
@@ -638,13 +691,6 @@
             });
 
             carregarDados();
-
-            window.addEventListener('resize', function() {
-                var isMobile = window.innerWidth <= 480;
-                if (isMobile) {
-                    document.querySelector('.container').style.padding = '0.1rem';
-                }
-            });
         })();
     </script>
 
