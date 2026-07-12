@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Dhenifer</title>
+    
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.85em' font-size='80'%3E❤️%3C/text%3E%3Cline x1='15' y1='82' x2='85' y2='82' stroke='%23e74c3c' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E" type="image/svg+xml" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+ID:wght@100..400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+NZ:wght@100..400&display=swap" rel="stylesheet">
+    
 <style>
         @font-face {
             font-family: 'Aston Script';
@@ -288,3 +302,396 @@
             }
         }
     </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="carta-wrapper">
+            <div class="carta-papel" id="cartaPapel" role="button" tabindex="0" aria-label="Abrir carta">
+
+                <img class="fundo-carta" id="fundoCarta" src="" alt="Fundo da carta" />
+                <img class="imagem-carta" id="imagemCarta" src="" alt="Imagem da carta" />
+
+                <div class="conteudo-interno" id="conteudoInterno">
+                    <img class="imagem-interna" id="imagemInterna" src="" alt="Conteúdo da carta" />
+                    <div class="texto-sobreposto" id="textoSobreposto"></div>
+                    <img class="lapis-animado" id="lapisAnimado" src="" alt="Lápis" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            var carta = document.getElementById('cartaPapel');
+            var fundoCarta = document.getElementById('fundoCarta');
+            var imgCarta = document.getElementById('imagemCarta');
+            var imgInterna = document.getElementById('imagemInterna');
+            var textoSobreposto = document.getElementById('textoSobreposto');
+            var lapisAnimado = document.getElementById('lapisAnimado');
+
+            var URL_DADOS = 'https://raw.githubusercontent.com/Mikill73/Dhenifer/refs/heads/main/configuracoes.json';
+
+            var STORAGE_FUNDO = 'carta_1mes_imagem_fundo';
+            var STORAGE_CARTA = 'carta_1mes_imagem_carta';
+            var STORAGE_INTERNA = 'carta_1mes_imagem_interna';
+            var STORAGE_LAPIS = 'carta_1mes_imagem_lapis';
+            var STORAGE_SOM_ABRIR = 'carta_1mes_som_abrir';
+            var STORAGE_SOM_ESCREVER = 'carta_1mes_som_escrever';
+            var STORAGE_MUSICA = 'carta_1mes_musica';
+            var STORAGE_CONFIG_FUNDO = 'carta_1mes_config_fundo';
+            var STORAGE_CONFIG_CARTA = 'carta_1mes_config_carta';
+            var STORAGE_CONFIG_INTERNA = 'carta_1mes_config_interna';
+            var STORAGE_CONFIG_LAPIS = 'carta_1mes_config_lapis';
+            var STORAGE_CONFIG_TEXTO = 'carta_1mes_config_texto';
+            var STORAGE_CONFIG_SOM = 'carta_1mes_config_som';
+
+            var TODAS_CHAVES = [
+                STORAGE_FUNDO, STORAGE_CARTA, STORAGE_INTERNA, STORAGE_LAPIS,
+                STORAGE_SOM_ABRIR, STORAGE_SOM_ESCREVER, STORAGE_MUSICA,
+                STORAGE_CONFIG_FUNDO, STORAGE_CONFIG_CARTA, STORAGE_CONFIG_INTERNA,
+                STORAGE_CONFIG_LAPIS, STORAGE_CONFIG_TEXTO, STORAGE_CONFIG_SOM
+            ];
+
+            var FONTES = {
+                'aston': 'Aston Script',
+                'playwrite-id': 'Playwrite ID',
+                'playwrite-nz': 'Playwrite NZ'
+            };
+
+            var animacaoTimeout = null;
+            var animacaoCancelada = false;
+            var textoCompleto = '';
+            var posicaoLetraAtual = 0;
+            var estaAberto = false;
+            var somAbrir = null;
+            var somEscrever = null;
+            var musicaFundo = null;
+            var somEscreverTocado = false;
+            var musicaTimeout = null;
+
+            function carregarImagemStorage(chave) {
+                return localStorage.getItem(chave);
+            }
+
+            function carregarConfig(chave) {
+                var dados = localStorage.getItem(chave);
+                return dados ? JSON.parse(dados) : null;
+            }
+
+            function tocarSom(som) {
+                if (som) {
+                    try {
+                        som.currentTime = 0;
+                        som.play().catch(function() {});
+                    } catch(e) {}
+                }
+            }
+
+            function pararSom(som) {
+                if (som) {
+                    try {
+                        som.pause();
+                        som.currentTime = 0;
+                    } catch(e) {}
+                }
+            }
+
+            function pararAnimacao() {
+                animacaoCancelada = true;
+                if (animacaoTimeout) {
+                    clearTimeout(animacaoTimeout);
+                    animacaoTimeout = null;
+                }
+                if (somEscrever) {
+                    pararSom(somEscrever);
+                }
+                somEscreverTocado = false;
+            }
+
+            function tocarSomEscrever() {
+                if (somEscrever && !somEscreverTocado) {
+                    somEscreverTocado = true;
+                    try {
+                        somEscrever.currentTime = 0;
+                        somEscrever.play().catch(function() {});
+                    } catch(e) {}
+                }
+            }
+
+            function iniciarAnimacaoEscrita() {
+                pararAnimacao();
+                
+                var configTexto = carregarConfig(STORAGE_CONFIG_TEXTO);
+                var texto = configTexto ? configTexto.texto : 'Feliz 1 mês! ❤️';
+                textoCompleto = texto;
+                posicaoLetraAtual = 0;
+                animacaoCancelada = false;
+                somEscreverTocado = false;
+                
+                textoSobreposto.textContent = '';
+                
+                var cursor = document.createElement('span');
+                cursor.className = 'cursor-blink';
+                textoSobreposto.appendChild(cursor);
+                
+                var velocidade = configTexto ? (configTexto.velocidade || 80) : 80;
+                var posX = 50;
+                var posY = 50;
+                
+                var configLapis = carregarConfig(STORAGE_CONFIG_LAPIS);
+                var rotacaoLapisBase = configLapis ? (configLapis.rotacao || -30) : -30;
+                var tamanhoLapisBase = configLapis ? (configLapis.tamanho || 60) : 60;
+                
+                function escreverProximaLinha() {
+                    if (animacaoCancelada) return;
+                    
+                    if (posicaoLetraAtual < textoCompleto.length) {
+                        var letra = textoCompleto.charAt(posicaoLetraAtual);
+                        var cursorElement = textoSobreposto.querySelector('.cursor-blink');
+                        
+                        if (cursorElement) {
+                            cursorElement.remove();
+                        }
+                        
+                        textoSobreposto.textContent += letra;
+                        
+                        var novoCursor = document.createElement('span');
+                        novoCursor.className = 'cursor-blink';
+                        textoSobreposto.appendChild(novoCursor);
+                        
+                        var progresso = (posicaoLetraAtual + 1) / textoCompleto.length;
+                        var angulo = progresso * 0.8 - 0.4;
+                        var raio = 10 + (1 - progresso) * 6;
+                        
+                        var offsetX = Math.sin(angulo * 2) * raio * 0.5;
+                        var offsetY = Math.cos(angulo * 1.5) * raio * 0.3 - progresso * 3;
+                        
+                        var lapisX = posX + offsetX * 0.4;
+                        var lapisY = posY + offsetY * 0.4 + progresso * 2;
+                        
+                        lapisAnimado.style.left = lapisX + '%';
+                        lapisAnimado.style.top = lapisY + '%';
+                        
+                        lapisAnimado.style.transform = 'translate(-50%, -50%) rotate(' + (rotacaoLapisBase + (1 - progresso) * 8) + 'deg) scale(' + (tamanhoLapisBase / 100) + ')';
+                        
+                        if (letra !== ' ') {
+                            tocarSomEscrever();
+                        }
+                        
+                        posicaoLetraAtual++;
+                        
+                        var atraso = letra === ' ' ? velocidade * 0.2 : velocidade;
+                        animacaoTimeout = setTimeout(escreverProximaLinha, atraso);
+                    } else {
+                        var cursorElement = textoSobreposto.querySelector('.cursor-blink');
+                        if (cursorElement) {
+                            cursorElement.remove();
+                        }
+                        
+                        lapisAnimado.style.left = '58%';
+                        lapisAnimado.style.top = '54%';
+                        
+                        animacaoTimeout = null;
+                        if (somEscrever) {
+                            pararSom(somEscrever);
+                        }
+                        somEscreverTocado = false;
+                    }
+                }
+                
+                setTimeout(escreverProximaLinha, 300);
+            }
+
+            function carregarSomStorage(chave) {
+                var dados = localStorage.getItem(chave);
+                if (dados) {
+                    try {
+                        var audio = new Audio(dados);
+                        audio.preload = 'auto';
+                        return audio;
+                    } catch(e) {
+                        return null;
+                    }
+                }
+                return null;
+            }
+
+            function tocarMusicaFundo() {
+                if (musicaFundo) {
+                    try {
+                        musicaFundo.volume = 0;
+                        musicaFundo.loop = true;
+                        musicaFundo.play().catch(function() {});
+                        
+                        var volumeAtual = 0;
+                        var alvo = 0.45;
+                        var passo = 0.005;
+                        
+                        function aumentarVolume() {
+                            if (volumeAtual < alvo) {
+                                volumeAtual = Math.min(volumeAtual + passo, alvo);
+                                musicaFundo.volume = volumeAtual;
+                                setTimeout(aumentarVolume, 100);
+                            }
+                        }
+                        
+                        setTimeout(aumentarVolume, 100);
+                    } catch(e) {}
+                }
+            }
+
+            function pararMusicaFundo() {
+                if (musicaFundo) {
+                    try {
+                        musicaFundo.pause();
+                        musicaFundo.currentTime = 0;
+                        musicaFundo.volume = 0;
+                    } catch(e) {}
+                }
+                if (musicaTimeout) {
+                    clearTimeout(musicaTimeout);
+                    musicaTimeout = null;
+                }
+            }
+
+            function aplicarDados() {
+                var fundoDados = carregarImagemStorage(STORAGE_FUNDO);
+                if (fundoDados) {
+                    fundoCarta.src = fundoDados;
+                    fundoCarta.style.display = 'block';
+                } else {
+                    fundoCarta.style.display = 'none';
+                }
+
+                var cartaDados = carregarImagemStorage(STORAGE_CARTA);
+                if (cartaDados) {
+                    imgCarta.src = cartaDados;
+                    imgCarta.style.display = 'block';
+                } else {
+                    imgCarta.style.display = 'none';
+                }
+
+                var internaDados = carregarImagemStorage(STORAGE_INTERNA);
+                if (internaDados) {
+                    imgInterna.src = internaDados;
+                    imgInterna.style.display = 'block';
+                } else {
+                    imgInterna.style.display = 'none';
+                }
+
+                var configLapis = carregarConfig(STORAGE_CONFIG_LAPIS);
+                var lapisDados = carregarImagemStorage(STORAGE_LAPIS);
+                if (lapisDados) {
+                    lapisAnimado.src = lapisDados;
+                    lapisAnimado.style.display = 'block';
+                    if (configLapis) {
+                        var rot = configLapis.rotacao || -30;
+                        var tam = configLapis.tamanho || 60;
+                        lapisAnimado.style.transform = 'rotate(' + rot + 'deg) scale(' + (tam / 100) + ')';
+                    }
+                } else {
+                    lapisAnimado.style.display = 'none';
+                }
+
+                var configTexto = carregarConfig(STORAGE_CONFIG_TEXTO);
+                if (configTexto) {
+                    var fonte = configTexto.fonte || 'aston';
+                    var nomeFonte = FONTES[fonte] || 'Aston Script';
+                    textoSobreposto.style.fontFamily = '\'' + nomeFonte + '\', cursive';
+                    textoSobreposto.style.color = configTexto.cor || '#4a2c2a';
+                }
+
+                somAbrir = carregarSomStorage(STORAGE_SOM_ABRIR);
+                somEscrever = carregarSomStorage(STORAGE_SOM_ESCREVER);
+                musicaFundo = carregarSomStorage(STORAGE_MUSICA);
+                if (musicaFundo) {
+                    musicaFundo.volume = 0;
+                    musicaFundo.loop = true;
+                }
+            }
+
+            function carregarDados() {
+                fetch(URL_DADOS)
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error('HTTP ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(function(dados) {
+                        for (var chave in dados) {
+                            if (dados.hasOwnProperty(chave) && TODAS_CHAVES.indexOf(chave) !== -1) {
+                                localStorage.setItem(chave, dados[chave]);
+                            }
+                        }
+                        aplicarDados();
+                    })
+                    .catch(function() {
+                        aplicarDados();
+                    });
+            }
+
+            function abrirCarta() {
+                if (carta.classList.contains('aberta')) {
+                    carta.classList.remove('aberta');
+                    carta.setAttribute('aria-label', 'Carta fechada');
+                    estaAberto = false;
+                    pararAnimacao();
+                    textoSobreposto.textContent = '';
+                    lapisAnimado.classList.remove('visivel');
+                    pararMusicaFundo();
+                    return;
+                }
+                
+                tocarSom(somAbrir);
+                
+                var configSom = carregarConfig(STORAGE_CONFIG_SOM);
+                var tempo = configSom ? (configSom.tempoAbertura || 700) : 700;
+                carta.style.transition = 'transform ' + tempo + 'ms cubic-bezier(0.23, 1, 0.32, 1)';
+                
+                carta.classList.add('aberta');
+                carta.setAttribute('aria-label', 'Carta aberta');
+                estaAberto = true;
+                
+                var lapisDados = carregarImagemStorage(STORAGE_LAPIS);
+                if (lapisDados) {
+                    lapisAnimado.classList.add('visivel');
+                    lapisAnimado.style.left = '46%';
+                    lapisAnimado.style.top = '46%';
+                    var configLapis = carregarConfig(STORAGE_CONFIG_LAPIS);
+                    var rot = configLapis ? (configLapis.rotacao || -30) : -30;
+                    var tam = configLapis ? (configLapis.tamanho || 60) : 60;
+                    lapisAnimado.style.transform = 'translate(-50%, -50%) rotate(' + rot + 'deg) scale(' + (tam / 100) + ')';
+                }
+                
+                if (musicaFundo) {
+                    musicaTimeout = setTimeout(function() {
+                        tocarMusicaFundo();
+                    }, 1000);
+                }
+                
+                setTimeout(function() {
+                    iniciarAnimacaoEscrita();
+                }, Math.min(tempo * 0.4, 400));
+            }
+
+            carta.addEventListener('click', function(e) {
+                e.stopPropagation();
+                abrirCarta();
+            });
+
+            carta.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    abrirCarta();
+                }
+            });
+
+            carregarDados();
+        })();
+    </script>
+
+</body>
+</html>
