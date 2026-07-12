@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playwrite+ID:wght@100..400&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playwrite+NZ:wght@100..400&display=swap" rel="stylesheet">
     
-    <style>
+<style>
         @font-face {
             font-family: 'Aston Script';
             src: local('Aston Script'), local('AstonScript'),
@@ -39,7 +39,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0.4rem;
+            padding: 0.2rem;
             font-family: system-ui, -apple-system, sans-serif;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
@@ -47,13 +47,12 @@
 
         .container {
             width: 100%;
-            max-width: 430px;
+            max-width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            max-height: 780px;
-            padding: 0.2rem;
+            padding: 0.1rem;
         }
 
         .carta-wrapper {
@@ -64,13 +63,12 @@
             perspective: 1200px;
             position: relative;
             height: 100%;
-            max-height: 650px;
         }
 
         .carta-papel {
             width: 100%;
-            max-width: 400px;
-            aspect-ratio: 16 / 10;
+            max-width: 95%;
+            aspect-ratio: 16 / 11;
             position: relative;
             cursor: pointer;
             overflow: visible;
@@ -130,7 +128,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 6% 8%;
+            padding: 8% 10%;
         }
 
         .imagem-interna {
@@ -149,14 +147,14 @@
             position: absolute;
             font-family: 'Aston Script', cursive;
             color: #4a2c2a;
-            font-size: clamp(0.7rem, 3vw, 1.6rem);
+            font-size: clamp(0.5rem, 2.2vw, 1.2rem);
             text-align: left;
             line-height: 1.2;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             pointer-events: none;
             z-index: 3;
-            padding: 0.2rem 0.5rem;
-            max-width: 78%;
+            padding: 0.1rem 0.3rem;
+            max-width: 82%;
             word-wrap: break-word;
             background: transparent !important;
             left: 50%;
@@ -164,13 +162,13 @@
             transform: translate(-50%, -50%) !important;
             width: auto;
             white-space: pre-wrap;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.01em;
         }
 
         .texto-sobreposto .cursor-blink {
             display: inline-block;
-            width: 2px;
-            height: 0.85em;
+            width: 1.5px;
+            height: 0.8em;
             background: currentColor;
             margin-left: 1px;
             animation: piscar 0.7s step-end infinite;
@@ -191,12 +189,12 @@
             transition: transform 0.12s ease;
             opacity: 0;
             transform-origin: center center;
-            width: 10%;
-            height: 10%;
-            min-width: 20px;
-            min-height: 20px;
-            max-width: 40px;
-            max-height: 40px;
+            width: 8%;
+            height: 8%;
+            min-width: 14px;
+            min-height: 14px;
+            max-width: 30px;
+            max-height: 30px;
         }
 
         .lapis-animado.visivel {
@@ -219,68 +217,69 @@
             transform: scale(1) translateZ(15px) rotateX(0deg);
         }
 
+        /* CELULAR - AUMENTA A IMAGEM E DIMINUI O TEXTO */
         @media (max-width: 480px) {
             body {
-                padding: 0.2rem;
+                padding: 0.1rem;
             }
             
             .container {
-                padding: 0.1rem;
-                max-height: 680px;
+                padding: 0;
+                max-height: 100vh;
             }
             
             .carta-wrapper {
-                max-height: 580px;
+                max-height: 100vh;
             }
             
             .carta-papel {
-                max-width: 100%;
+                max-width: 98%;
+                aspect-ratio: 16 / 12;
+            }
+            
+            .conteudo-interno {
+                padding: 6% 8%;
+            }
+            
+            .texto-sobreposto {
+                font-size: clamp(0.45rem, 2vw, 1rem);
+                max-width: 85%;
+                padding: 0.1rem 0.3rem;
+                letter-spacing: 0.005em;
+            }
+            
+            .lapis-animado {
+                width: 7%;
+                height: 7%;
+                min-width: 12px;
+                min-height: 12px;
+                max-width: 24px;
+                max-height: 24px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .carta-papel {
                 aspect-ratio: 16 / 13;
+            }
+            
+            .texto-sobreposto {
+                font-size: clamp(0.4rem, 1.8vw, 0.9rem);
+                max-width: 88%;
+                padding: 0.05rem 0.2rem;
             }
             
             .conteudo-interno {
                 padding: 5% 6%;
             }
             
-            .texto-sobreposto {
-                font-size: clamp(0.75rem, 3.8vw, 1.6rem);
-                max-width: 82%;
-                padding: 0.15rem 0.4rem;
-                letter-spacing: 0.01em;
-            }
-            
             .lapis-animado {
-                width: 8%;
-                height: 8%;
-                min-width: 16px;
-                min-height: 16px;
-                max-width: 32px;
-                max-height: 32px;
-            }
-        }
-
-        @media (max-width: 380px) {
-            .carta-papel {
-                aspect-ratio: 16 / 14;
-            }
-            
-            .texto-sobreposto {
-                font-size: clamp(0.65rem, 3.5vw, 1.3rem);
-                max-width: 85%;
-                padding: 0.1rem 0.3rem;
-            }
-            
-            .conteudo-interno {
-                padding: 4% 5%;
-            }
-            
-            .lapis-animado {
-                width: 7%;
-                height: 7%;
-                min-width: 14px;
-                min-height: 14px;
-                max-width: 28px;
-                max-height: 28px;
+                width: 6%;
+                height: 6%;
+                min-width: 10px;
+                min-height: 10px;
+                max-width: 20px;
+                max-height: 20px;
             }
         }
 
@@ -291,16 +290,16 @@
             }
             
             .texto-sobreposto {
-                font-size: clamp(1.4rem, 3vw, 3rem);
+                font-size: clamp(1.2rem, 2.5vw, 2.5rem);
                 max-width: 70%;
                 padding: 0.3rem 0.8rem;
             }
             
             .lapis-animado {
-                width: 12%;
-                height: 12%;
-                max-width: 50px;
-                max-height: 50px;
+                width: 10%;
+                height: 10%;
+                max-width: 45px;
+                max-height: 45px;
             }
         }
     </style>
