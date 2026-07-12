@@ -332,6 +332,7 @@
             var lapisAnimado = document.getElementById('lapisAnimado');
 
             var URL_DADOS = 'https://raw.githubusercontent.com/Mikill73/Dhenifer/refs/heads/main/configuracoes.json';
+            var URL_MUSICA = 'https://raw.githubusercontent.com/Mikill73/Dhenifer/main/West%20Coast%20-%20Lana%20Del%20Rey.mp3';
 
             var STORAGE_FUNDO = 'carta_1mes_imagem_fundo';
             var STORAGE_CARTA = 'carta_1mes_imagem_carta';
@@ -339,7 +340,6 @@
             var STORAGE_LAPIS = 'carta_1mes_imagem_lapis';
             var STORAGE_SOM_ABRIR = 'carta_1mes_som_abrir';
             var STORAGE_SOM_ESCREVER = 'carta_1mes_som_escrever';
-            var STORAGE_MUSICA = 'carta_1mes_musica';
             var STORAGE_CONFIG_FUNDO = 'carta_1mes_config_fundo';
             var STORAGE_CONFIG_CARTA = 'carta_1mes_config_carta';
             var STORAGE_CONFIG_INTERNA = 'carta_1mes_config_interna';
@@ -349,7 +349,7 @@
 
             var TODAS_CHAVES = [
                 STORAGE_FUNDO, STORAGE_CARTA, STORAGE_INTERNA, STORAGE_LAPIS,
-                STORAGE_SOM_ABRIR, STORAGE_SOM_ESCREVER, STORAGE_MUSICA,
+                STORAGE_SOM_ABRIR, STORAGE_SOM_ESCREVER,
                 STORAGE_CONFIG_FUNDO, STORAGE_CONFIG_CARTA, STORAGE_CONFIG_INTERNA,
                 STORAGE_CONFIG_LAPIS, STORAGE_CONFIG_TEXTO, STORAGE_CONFIG_SOM
             ];
@@ -367,9 +367,9 @@
             var estaAberto = false;
             var somAbrir = null;
             var somEscrever = null;
-            var musicaFundo = null;
             var somEscreverTocado = false;
-            var musicaTimeout = null;
+            var musicaFundo = null;
+            var fadeInterval = null;
 
             function carregarImagemStorage(chave) {
                 return localStorage.getItem(chave);
@@ -518,44 +518,6 @@
                 return null;
             }
 
-            function tocarMusicaFundo() {
-                if (musicaFundo) {
-                    try {
-                        musicaFundo.volume = 0;
-                        musicaFundo.loop = true;
-                        musicaFundo.play().catch(function() {});
-                        
-                        var volumeAtual = 0;
-                        var alvo = 0.45;
-                        var passo = 0.005;
-                        
-                        function aumentarVolume() {
-                            if (volumeAtual < alvo) {
-                                volumeAtual = Math.min(volumeAtual + passo, alvo);
-                                musicaFundo.volume = volumeAtual;
-                                setTimeout(aumentarVolume, 100);
-                            }
-                        }
-                        
-                        setTimeout(aumentarVolume, 100);
-                    } catch(e) {}
-                }
-            }
-
-            function pararMusicaFundo() {
-                if (musicaFundo) {
-                    try {
-                        musicaFundo.pause();
-                        musicaFundo.currentTime = 0;
-                        musicaFundo.volume = 0;
-                    } catch(e) {}
-                }
-                if (musicaTimeout) {
-                    clearTimeout(musicaTimeout);
-                    musicaTimeout = null;
-                }
-            }
-
             function aplicarDados() {
                 var fundoDados = carregarImagemStorage(STORAGE_FUNDO);
                 if (fundoDados) {
@@ -605,11 +567,6 @@
 
                 somAbrir = carregarSomStorage(STORAGE_SOM_ABRIR);
                 somEscrever = carregarSomStorage(STORAGE_SOM_ESCREVER);
-                musicaFundo = carregarSomStorage(STORAGE_MUSICA);
-                if (musicaFundo) {
-                    musicaFundo.volume = 0;
-                    musicaFundo.loop = true;
-                }
             }
 
             function carregarDados() {
@@ -631,6 +588,60 @@
                     .catch(function() {
                         aplicarDados();
                     });
+            }
+
+            function iniciarMusicaFundo() {
+                if (musicaFundo) {
+                    try {
+                        musicaFundo.volume = 0;
+                        musicaFundo.loop = true;
+                        musicaFundo.play().catch(function() {});
+                        
+                        var volumeAlvo = 0.55;
+                        var duracaoFade = 3000;
+                        var passo = 50;
+                        var incremento = volumeAlvo / (duracaoFade / passo);
+                        var volumeAtual = 0;
+                        
+                        if (fadeInterval) {
+                            clearInterval(fadeInterval);
+                        }
+                        
+                        fadeInterval = setInterval(function() {
+                            volumeAtual += incremento;
+                            if (volumeAtual >= volumeAlvo) {
+                                volumeAtual = volumeAlvo;
+                                clearInterval(fadeInterval);
+                                fadeInterval = null;
+                            }
+                            musicaFundo.volume = volumeAtual;
+                        }, passo);
+                    } catch(e) {}
+                }
+            }
+
+            function pararMusicaFundo() {
+                if (fadeInterval) {
+                    clearInterval(fadeInterval);
+                    fadeInterval = null;
+                }
+                if (musicaFundo) {
+                    try {
+                        musicaFundo.pause();
+                        musicaFundo.currentTime = 0;
+                        musicaFundo.volume = 0;
+                    } catch(e) {}
+                }
+            }
+
+            function carregarMusicaFundo() {
+                try {
+                    musicaFundo = new Audio(URL_MUSICA);
+                    musicaFundo.preload = 'auto';
+                    musicaFundo.volume = 0;
+                } catch(e) {
+                    musicaFundo = null;
+                }
             }
 
             function abrirCarta() {
@@ -666,15 +677,13 @@
                     lapisAnimado.style.transform = 'translate(-50%, -50%) rotate(' + rot + 'deg) scale(' + (tam / 100) + ')';
                 }
                 
-                if (musicaFundo) {
-                    musicaTimeout = setTimeout(function() {
-                        tocarMusicaFundo();
-                    }, 1000);
-                }
-                
                 setTimeout(function() {
                     iniciarAnimacaoEscrita();
                 }, Math.min(tempo * 0.4, 400));
+
+                setTimeout(function() {
+                    iniciarMusicaFundo();
+                }, 1000);
             }
 
             carta.addEventListener('click', function(e) {
@@ -690,6 +699,14 @@
             });
 
             carregarDados();
+            carregarMusicaFundo();
+
+            window.addEventListener('resize', function() {
+                var isMobile = window.innerWidth <= 480;
+                if (isMobile) {
+                    document.querySelector('.container').style.padding = '0.1rem';
+                }
+            });
         })();
     </script>
 
