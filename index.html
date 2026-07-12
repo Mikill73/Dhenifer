@@ -39,7 +39,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 0.8rem;
+            padding: 0.4rem;
             font-family: system-ui, -apple-system, sans-serif;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
@@ -47,13 +47,13 @@
 
         .container {
             width: 100%;
-            max-width: 480px;
+            max-width: 430px;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            max-height: 800px;
-            padding: 0.5rem;
+            max-height: 780px;
+            padding: 0.2rem;
         }
 
         .carta-wrapper {
@@ -64,13 +64,13 @@
             perspective: 1200px;
             position: relative;
             height: 100%;
-            max-height: 700px;
+            max-height: 650px;
         }
 
         .carta-papel {
             width: 100%;
-            max-width: 420px;
-            aspect-ratio: 16 / 11;
+            max-width: 400px;
+            aspect-ratio: 16 / 12;
             position: relative;
             cursor: pointer;
             overflow: visible;
@@ -130,7 +130,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 8%;
+            padding: 6% 8%;
         }
 
         .imagem-interna {
@@ -149,28 +149,30 @@
             position: absolute;
             font-family: 'Aston Script', cursive;
             color: #4a2c2a;
-            font-size: clamp(1.2rem, 5vw, 2.8rem);
-            text-align: center;
-            line-height: 1.3;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-size: clamp(0.9rem, 4vw, 2.2rem);
+            text-align: left;
+            line-height: 1.2;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             pointer-events: none;
             z-index: 3;
-            padding: 0.3rem;
-            max-width: 90%;
+            padding: 0.2rem 0.5rem;
+            max-width: 78%;
             word-wrap: break-word;
             background: transparent !important;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%) !important;
             width: auto;
+            white-space: pre-wrap;
+            letter-spacing: 0.02em;
         }
 
         .texto-sobreposto .cursor-blink {
             display: inline-block;
             width: 2px;
-            height: 0.9em;
+            height: 0.85em;
             background: currentColor;
-            margin-left: 2px;
+            margin-left: 1px;
             animation: piscar 0.7s step-end infinite;
             vertical-align: text-bottom;
         }
@@ -186,11 +188,15 @@
             pointer-events: none;
             object-fit: contain;
             background: transparent !important;
-            transition: transform 0.15s ease;
+            transition: transform 0.12s ease;
             opacity: 0;
             transform-origin: center center;
-            width: 12%;
-            height: 12%;
+            width: 10%;
+            height: 10%;
+            min-width: 20px;
+            min-height: 20px;
+            max-width: 40px;
+            max-height: 40px;
         }
 
         .lapis-animado.visivel {
@@ -198,13 +204,13 @@
         }
 
         .carta-papel.aberta {
-            transform: scale(1.04) translateZ(60px) rotateY(-1.5deg);
+            transform: scale(1.04) translateZ(50px) rotateY(-1.5deg);
             z-index: 10;
         }
 
         .carta-papel.aberta .imagem-carta {
-            opacity: 0.15;
-            transform: scale(0.88) translateZ(-40px);
+            opacity: 0.12;
+            transform: scale(0.88) translateZ(-35px);
             filter: blur(2px);
         }
 
@@ -213,62 +219,88 @@
             transform: scale(1) translateZ(15px) rotateX(0deg);
         }
 
-        /* Ajustes específicos para celular */
         @media (max-width: 480px) {
             body {
-                padding: 0.4rem;
+                padding: 0.2rem;
             }
             
             .container {
-                padding: 0.3rem;
-                max-height: 700px;
+                padding: 0.1rem;
+                max-height: 680px;
+            }
+            
+            .carta-wrapper {
+                max-height: 580px;
             }
             
             .carta-papel {
                 max-width: 100%;
-                aspect-ratio: 16 / 11.5;
+                aspect-ratio: 16 / 13;
             }
             
             .conteudo-interno {
-                padding: 6%;
+                padding: 5% 6%;
             }
             
             .texto-sobreposto {
-                font-size: clamp(1rem, 4.5vw, 2rem);
-                max-width: 75%;
-                padding: 0.2rem;
+                font-size: clamp(0.75rem, 3.8vw, 1.6rem);
+                max-width: 82%;
+                padding: 0.15rem 0.4rem;
+                letter-spacing: 0.01em;
             }
             
             .lapis-animado {
-                width: 10%;
-                height: 10%;
+                width: 8%;
+                height: 8%;
+                min-width: 16px;
+                min-height: 16px;
+                max-width: 32px;
+                max-height: 32px;
             }
         }
 
         @media (max-width: 380px) {
             .carta-papel {
-                aspect-ratio: 16 / 12;
+                aspect-ratio: 16 / 14;
             }
             
             .texto-sobreposto {
-                font-size: clamp(0.8rem, 4vw, 1.6rem);
-                max-width: 80%;
+                font-size: clamp(0.65rem, 3.5vw, 1.3rem);
+                max-width: 85%;
+                padding: 0.1rem 0.3rem;
             }
             
             .conteudo-interno {
-                padding: 4%;
+                padding: 4% 5%;
+            }
+            
+            .lapis-animado {
+                width: 7%;
+                height: 7%;
+                min-width: 14px;
+                min-height: 14px;
+                max-width: 28px;
+                max-height: 28px;
             }
         }
 
         @media (min-width: 768px) {
             .carta-papel {
-                max-width: 500px;
+                max-width: 480px;
                 aspect-ratio: 16 / 10;
             }
             
             .texto-sobreposto {
-                font-size: clamp(1.8rem, 3.5vw, 3.5rem);
-                max-width: 65%;
+                font-size: clamp(1.4rem, 3vw, 3rem);
+                max-width: 70%;
+                padding: 0.3rem 0.8rem;
+            }
+            
+            .lapis-animado {
+                width: 12%;
+                height: 12%;
+                max-width: 50px;
+                max-height: 50px;
             }
         }
     </style>
@@ -338,12 +370,6 @@
             var somEscrever = null;
             var somEscreverTocado = false;
 
-            function salvarImagemStorage(chave, dados) {
-                try {
-                    localStorage.setItem(chave, dados);
-                } catch (e) {}
-            }
-
             function carregarImagemStorage(chave) {
                 return localStorage.getItem(chave);
             }
@@ -351,13 +377,6 @@
             function carregarConfig(chave) {
                 var dados = localStorage.getItem(chave);
                 return dados ? JSON.parse(dados) : null;
-            }
-
-            function aplicarConfigImagem(img, rotacao, tamanho) {
-                if (!img || !img.src) return;
-                img.style.transform = 'rotate(' + rotacao + 'deg) scale(' + (tamanho / 100) + ')';
-                img.style.objectFit = 'contain';
-                img.style.background = 'transparent';
             }
 
             function tocarSom(som) {
@@ -443,10 +462,10 @@
                         
                         var progresso = (posicaoLetraAtual + 1) / textoCompleto.length;
                         var angulo = progresso * 0.8 - 0.4;
-                        var raio = 12 + (1 - progresso) * 8;
+                        var raio = 10 + (1 - progresso) * 6;
                         
                         var offsetX = Math.sin(angulo * 2) * raio * 0.5;
-                        var offsetY = Math.cos(angulo * 1.5) * raio * 0.35 - progresso * 4;
+                        var offsetY = Math.cos(angulo * 1.5) * raio * 0.3 - progresso * 3;
                         
                         var lapisX = posX + offsetX * 0.4;
                         var lapisY = posY + offsetY * 0.4 + progresso * 2;
@@ -462,7 +481,7 @@
                         
                         posicaoLetraAtual++;
                         
-                        var atraso = letra === ' ' ? velocidade * 0.3 : velocidade;
+                        var atraso = letra === ' ' ? velocidade * 0.2 : velocidade;
                         animacaoTimeout = setTimeout(escreverProximaLinha, atraso);
                     } else {
                         var cursorElement = textoSobreposto.querySelector('.cursor-blink');
@@ -470,8 +489,8 @@
                             cursorElement.remove();
                         }
                         
-                        lapisAnimado.style.left = '60%';
-                        lapisAnimado.style.top = '55%';
+                        lapisAnimado.style.left = '58%';
+                        lapisAnimado.style.top = '54%';
                         
                         animacaoTimeout = null;
                         if (somEscrever) {
@@ -481,7 +500,7 @@
                     }
                 }
                 
-                setTimeout(escreverProximaLinha, 400);
+                setTimeout(escreverProximaLinha, 300);
             }
 
             function carregarSomStorage(chave) {
@@ -498,27 +517,31 @@
                 return null;
             }
 
-            function carregarImagemDoStorage(img, storageKey, configKey) {
-                var dados = carregarImagemStorage(storageKey);
-                if (dados) {
-                    img.src = dados;
-                    img.style.display = 'block';
-                    var config = carregarConfig(configKey);
-                    if (config) {
-                        aplicarConfigImagem(img, config.rotacao || 0, config.tamanho || 100);
-                    }
-                    return true;
-                } else {
-                    img.style.display = 'none';
-                    return false;
-                }
-            }
-
             function aplicarDados() {
-                carregarImagemDoStorage(fundoCarta, STORAGE_FUNDO, STORAGE_CONFIG_FUNDO);
-                carregarImagemDoStorage(imgCarta, STORAGE_CARTA, STORAGE_CONFIG_CARTA);
-                carregarImagemDoStorage(imgInterna, STORAGE_INTERNA, STORAGE_CONFIG_INTERNA);
-                
+                var fundoDados = carregarImagemStorage(STORAGE_FUNDO);
+                if (fundoDados) {
+                    fundoCarta.src = fundoDados;
+                    fundoCarta.style.display = 'block';
+                } else {
+                    fundoCarta.style.display = 'none';
+                }
+
+                var cartaDados = carregarImagemStorage(STORAGE_CARTA);
+                if (cartaDados) {
+                    imgCarta.src = cartaDados;
+                    imgCarta.style.display = 'block';
+                } else {
+                    imgCarta.style.display = 'none';
+                }
+
+                var internaDados = carregarImagemStorage(STORAGE_INTERNA);
+                if (internaDados) {
+                    imgInterna.src = internaDados;
+                    imgInterna.style.display = 'block';
+                } else {
+                    imgInterna.style.display = 'none';
+                }
+
                 var configLapis = carregarConfig(STORAGE_CONFIG_LAPIS);
                 var lapisDados = carregarImagemStorage(STORAGE_LAPIS);
                 if (lapisDados) {
@@ -590,8 +613,8 @@
                 var lapisDados = carregarImagemStorage(STORAGE_LAPIS);
                 if (lapisDados) {
                     lapisAnimado.classList.add('visivel');
-                    lapisAnimado.style.left = '48%';
-                    lapisAnimado.style.top = '48%';
+                    lapisAnimado.style.left = '46%';
+                    lapisAnimado.style.top = '46%';
                     var configLapis = carregarConfig(STORAGE_CONFIG_LAPIS);
                     var rot = configLapis ? (configLapis.rotacao || -30) : -30;
                     var tam = configLapis ? (configLapis.tamanho || 60) : 60;
@@ -600,7 +623,7 @@
                 
                 setTimeout(function() {
                     iniciarAnimacaoEscrita();
-                }, Math.min(tempo * 0.5, 500));
+                }, Math.min(tempo * 0.4, 400));
             }
 
             carta.addEventListener('click', function(e) {
@@ -620,7 +643,7 @@
             window.addEventListener('resize', function() {
                 var isMobile = window.innerWidth <= 480;
                 if (isMobile) {
-                    document.querySelector('.container').style.padding = '0.3rem';
+                    document.querySelector('.container').style.padding = '0.1rem';
                 }
             });
         })();
