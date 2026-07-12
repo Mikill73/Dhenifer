@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Dhenifer</title>
     
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.85em' font-size='80'%3E❤️%3C/text%3E%3Cline x1='15' y1='82' x2='85' y2='82' stroke='%23e74c3c' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E" type="image/svg+xml" />
@@ -28,24 +28,30 @@
             box-sizing: border-box;
         }
 
-        body {
+        html, body {
+            width: 100%;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body {
             background: #f0ebe5;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 1.5rem;
+            padding: 8px;
             font-family: system-ui, -apple-system, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 480px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2rem;
+            justify-content: center;
+            padding: 4px;
         }
 
         .carta-wrapper {
@@ -59,8 +65,8 @@
 
         .carta-papel {
             width: 100%;
-            max-width: 760px;
-            aspect-ratio: 16 / 10;
+            max-width: 460px;
+            aspect-ratio: 16 / 11;
             position: relative;
             cursor: pointer;
             overflow: visible;
@@ -70,6 +76,7 @@
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             -webkit-user-select: none;
+            touch-action: manipulation;
         }
 
         .carta-papel:focus-visible {
@@ -136,22 +143,24 @@
             position: absolute;
             font-family: 'Aston Script', cursive;
             color: #4a2c2a;
-            font-size: 3rem;
+            font-size: clamp(0.8rem, 4vw, 2.8rem);
             text-align: center;
-            line-height: 1.3;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            line-height: 1.2;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             pointer-events: none;
             z-index: 3;
-            padding: 0.5rem;
-            max-width: 80%;
+            padding: 0.3rem;
+            max-width: 75%;
             word-wrap: break-word;
             background: transparent !important;
+            transform: translate(-50%, -50%);
+            letter-spacing: 0.02em;
         }
 
         .texto-sobreposto .cursor-blink {
             display: inline-block;
-            width: 3px;
-            height: 1em;
+            width: 2px;
+            height: 0.9em;
             background: currentColor;
             margin-left: 2px;
             animation: piscar 0.7s step-end infinite;
@@ -169,9 +178,11 @@
             pointer-events: none;
             object-fit: contain;
             background: transparent !important;
-            transition: transform 0.15s ease;
+            transition: transform 0.12s ease;
             opacity: 0;
             transform-origin: center center;
+            width: clamp(18px, 6vw, 50px);
+            height: clamp(18px, 6vw, 50px);
         }
 
         .lapis-animado.visivel {
@@ -179,33 +190,72 @@
         }
 
         .carta-papel.aberta {
-            transform: scale(1.08) translateZ(80px) rotateY(-2deg);
+            transform: scale(1.04) translateZ(40px) rotateY(-1.5deg);
             z-index: 10;
         }
 
         .carta-papel.aberta .imagem-carta {
-            opacity: 0.2;
-            transform: scale(0.85) translateZ(-60px);
-            filter: blur(3px);
+            opacity: 0.15;
+            transform: scale(0.88) translateZ(-40px);
+            filter: blur(2px);
         }
 
         .carta-papel.aberta .conteudo-interno {
             opacity: 1;
-            transform: scale(1) translateZ(20px) rotateX(0deg);
+            transform: scale(1) translateZ(10px) rotateX(0deg);
         }
 
-        @media (max-width: 700px) {
+        /* Ajustes para telas muito pequenas */
+        @media (max-width: 420px) {
+            body {
+                padding: 4px;
+            }
             .carta-papel {
                 max-width: 100%;
+                aspect-ratio: 16 / 12;
             }
             .texto-sobreposto {
-                font-size: 2rem;
+                font-size: clamp(0.6rem, 3.5vw, 1.8rem);
+                max-width: 70%;
+                padding: 0.2rem;
+            }
+            .lapis-animado {
+                width: clamp(14px, 5vw, 35px);
+                height: clamp(14px, 5vw, 35px);
             }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 360px) {
             .texto-sobreposto {
-                font-size: 1.5rem;
+                font-size: clamp(0.5rem, 3vw, 1.4rem);
+                max-width: 65%;
+                line-height: 1.1;
+            }
+            .lapis-animado {
+                width: clamp(10px, 4vw, 28px);
+                height: clamp(10px, 4vw, 28px);
+            }
+        }
+
+        /* Para telas maiores (tablet/desktop) */
+        @media (min-width: 768px) {
+            body {
+                padding: 2rem;
+            }
+            .container {
+                max-width: 600px;
+            }
+            .carta-papel {
+                max-width: 560px;
+                aspect-ratio: 16 / 10;
+            }
+            .texto-sobreposto {
+                font-size: clamp(1.2rem, 3vw, 3.2rem);
+                max-width: 70%;
+            }
+            .lapis-animado {
+                width: clamp(24px, 4vw, 55px);
+                height: clamp(24px, 4vw, 55px);
             }
         }
     </style>
@@ -387,18 +437,19 @@
                         
                         var progresso = (posicaoLetraAtual + 1) / textoCompleto.length;
                         var angulo = progresso * 0.8 - 0.4;
-                        var raio = 15 + (1 - progresso) * 10;
+                        var raio = 12 + (1 - progresso) * 8;
                         
-                        var offsetX = Math.sin(angulo * 2) * raio * 0.6;
-                        var offsetY = Math.cos(angulo * 1.5) * raio * 0.4 - progresso * 5;
+                        var offsetX = Math.sin(angulo * 2) * raio * 0.5;
+                        var offsetY = Math.cos(angulo * 1.5) * raio * 0.35 - progresso * 4;
                         
-                        var lapisX = posX + offsetX * 0.5;
-                        var lapisY = posY + offsetY * 0.5 + progresso * 3;
+                        var lapisX = posX + offsetX * 0.4;
+                        var lapisY = posY + offsetY * 0.4 + progresso * 2;
                         
                         lapisAnimado.style.left = lapisX + '%';
                         lapisAnimado.style.top = lapisY + '%';
                         
-                        lapisAnimado.style.transform = 'translate(-50%, -50%) rotate(' + (rotacaoLapisBase + (1 - progresso) * 10) + 'deg) scale(' + (tamanhoLapisBase / 100) + ')';
+                        var rotacaoAtual = rotacaoLapisBase + (1 - progresso) * 8;
+                        lapisAnimado.style.transform = 'translate(-50%, -50%) rotate(' + rotacaoAtual + 'deg) scale(' + (tamanhoLapisBase / 100) + ')';
                         
                         if (letra !== ' ') {
                             tocarSomEscrever();
@@ -414,8 +465,8 @@
                             cursorElement.remove();
                         }
                         
-                        lapisAnimado.style.left = (posX + 15) + '%';
-                        lapisAnimado.style.top = (posY + 8) + '%';
+                        lapisAnimado.style.left = (posX + 12) + '%';
+                        lapisAnimado.style.top = (posY + 6) + '%';
                         
                         animacaoTimeout = null;
                         if (somEscrever) {
@@ -425,7 +476,7 @@
                     }
                 }
                 
-                setTimeout(escreverProximaLinha, 400);
+                setTimeout(escreverProximaLinha, 350);
             }
 
             function carregarSomStorage(chave) {
@@ -483,7 +534,7 @@
                     var nomeFonte = FONTES[fonte] || 'Aston Script';
                     textoSobreposto.style.fontFamily = '\'' + nomeFonte + '\', cursive';
                     textoSobreposto.style.color = configTexto.cor || '#4a2c2a';
-                    textoSobreposto.style.fontSize = (configTexto.tamanho || 3) + 'rem';
+                    textoSobreposto.style.fontSize = 'clamp(0.8rem, 4vw, 2.8rem)';
                     textoSobreposto.style.left = (configTexto.posX || 50) + '%';
                     textoSobreposto.style.top = (configTexto.posY || 50) + '%';
                     textoSobreposto.style.transform = 'translate(-50%, -50%)';
@@ -551,13 +602,17 @@
                 
                 setTimeout(function() {
                     iniciarAnimacaoEscrita();
-                }, Math.min(tempo * 0.5, 500));
+                }, Math.min(tempo * 0.4, 450));
             }
 
             carta.addEventListener('click', function(e) {
                 e.stopPropagation();
                 abrirCarta();
             });
+
+            carta.addEventListener('touchstart', function(e) {
+                // Previne o comportamento padrão em dispositivos móveis
+            }, { passive: true });
 
             carta.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
